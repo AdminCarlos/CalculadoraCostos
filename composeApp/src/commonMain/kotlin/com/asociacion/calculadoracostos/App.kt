@@ -1,37 +1,43 @@
 package com.asociacion.calculadoracostos
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asociacion.calculadoracostos.ViewModels.LoginViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import calculadoracostos.composeapp.generated.resources.Res
-import calculadoracostos.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
-fun App() {
+fun App(loginViewModel: LoginViewModel = viewModel { LoginViewModel() }) {
+
+
+    val textoState = loginViewModel.texto.collectAsState(Dispatchers.IO)
+
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+
+
+        Row {
+            Text(text = loginViewModel.texto.value, color = Color.Blue)
+
+            Button(onClick = {
+                if (loginViewModel.texto.value.equals("Hola")) {
+                    loginViewModel.setTexto("Adios")
+                } else {
+                    loginViewModel.setTexto("Hola")
                 }
+
+            }) {
+                Text(text = "Click", color = Color.Red)
             }
         }
+
+
     }
 }

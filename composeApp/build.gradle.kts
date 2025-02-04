@@ -46,6 +46,8 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -57,6 +59,11 @@ kotlin {
 android {
     namespace = "com.asociacion.calculadoracostos"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    buildFeatures {
+        compose=true
+
+    }
 
     defaultConfig {
         applicationId = "com.asociacion.calculadoracostos"

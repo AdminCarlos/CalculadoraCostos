@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+import kotlinx.coroutines.flow.*
 
 class LoginViewModel : ViewModel() {
 
@@ -13,7 +13,9 @@ class LoginViewModel : ViewModel() {
 
 
     fun setTexto(newTexto: String) {
-        _texto.value = newTexto
+        _texto.update{
+            newTexto
+        }
     }
 
 

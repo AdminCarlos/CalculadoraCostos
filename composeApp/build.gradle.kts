@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("androidx.room") version "2.7.0-alpha12"
+    id("com.google.devtools.ksp") version "1.9.22-1.0.18"
+
 }
 
 kotlin {
@@ -48,11 +51,23 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing")
+            implementation("androidx.room:room-gradle-plugin:2.7.0-alpha12")
+            implementation("androidx.room:room-compiler:2.7.0-alpha12")
+            implementation("androidx.room:room-runtime:2.7.0-alpha12")
+            implementation("androidx.sqlite:sqlite-bundled:2.5.0-alpha12")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
+        room{
+            schemaDirectory("$projectDir/schemas")
+            schemaDirectory("debug","$projectDir/schemas/debug")
+            schemaDirectory("release","$projectDir/schemas/release")
+        }
+
     }
 }
 

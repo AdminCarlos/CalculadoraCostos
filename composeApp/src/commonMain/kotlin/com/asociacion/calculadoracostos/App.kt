@@ -17,14 +17,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App(loginViewModel: LoginViewModel = viewModel { LoginViewModel() }) {
 
-
-    val textoState = loginViewModel.texto.collectAsState(Dispatchers.IO)
-
     MaterialTheme {
 
 
         Row {
-            Text(text = loginViewModel.texto.value, color = Color.Blue)
+            Text(text = loginViewModel.texto.collectAsState(Dispatchers.IO).value , color = Color.Blue)
 
             Button(onClick = {
                 if (loginViewModel.texto.value.equals("Hola")) {

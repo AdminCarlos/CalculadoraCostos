@@ -23,5 +23,5 @@ interface UsuarioDAO {
     @Query("""
         SELECT * FROM Usuario 
     """)
-    suspend fun getAllUsuarios() : Flow<List<Usuario>>
+    fun getAllUsuarios() : Flow<List<Usuario>>
 }

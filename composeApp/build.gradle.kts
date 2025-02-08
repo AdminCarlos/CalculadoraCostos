@@ -7,9 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    id("androidx.room") version "2.7.0-alpha12"
-    id("com.google.devtools.ksp") version "1.9.22-1.0.18"
-
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -19,7 +18,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -30,12 +29,12 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -48,27 +47,24 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing")
-            implementation("androidx.room:room-gradle-plugin:2.7.0-alpha12")
-            implementation("androidx.room:room-compiler:2.7.0-alpha12")
-            implementation("androidx.room:room-runtime:2.7.0-alpha12")
-            implementation("androidx.sqlite:sqlite-bundled:2.5.0-alpha12")
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
 
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
-        room{
-            schemaDirectory("$projectDir/schemas")
-            schemaDirectory("debug","$projectDir/schemas/debug")
-            schemaDirectory("release","$projectDir/schemas/release")
-        }
 
     }
+}
+
+room{
+    schemaDirectory("$projectDir/schemas")
+//    schemaDirectory("debug","$projectDir/schemas/debug")
+//    schemaDirectory("release","$projectDir/schemas/release")
 }
 
 android {
@@ -105,6 +101,7 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    ksp(libs.androidx.room.compiler)
 }
 
 compose.desktop {

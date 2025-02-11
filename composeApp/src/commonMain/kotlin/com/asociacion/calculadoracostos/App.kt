@@ -1,42 +1,63 @@
 package com.asociacion.calculadoracostos
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asociacion.calculadoracostos.Data.Entities.Usuario
 import com.asociacion.calculadoracostos.ViewModels.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinContext
+import org.koin.compose.viewmodel.koinViewModel
+import kotlin.random.Random
 
 @Composable
 @Preview
-fun App(loginViewModel: LoginViewModel = viewModel { LoginViewModel() }) {
+fun App() {
 
+    KoinContext {
 
+        val loginViewModel = koinViewModel<LoginViewModel>()
 
-    MaterialTheme {
+        val usuarios = loginViewModel.usuario.collectAsState(Dispatchers.IO).value
 
-
-        Row {
-            Text(text = loginViewModel.texto.collectAsState(Dispatchers.IO).value , color = Color.Blue)
+        MaterialTheme {
 
             Button(onClick = {
-                if (loginViewModel.texto.value.equals("Hola")) {
-                    loginViewModel.setTexto("Adios")
-                } else {
-                    loginViewModel.setTexto("Hola")
-                }
+
+                loginViewModel.insertUsuario(Usuario(null, Random.nextInt(100, 500).toString(), Random.nextInt(100, 500).toString()))
 
             }) {
-                Text(text = "Click", color = Color.Red)
+                Text("Click")
             }
+
+            LazyColumn {
+
+                items(
+                    items = usuarios,
+                    key = { usuario ->
+                        usuario.id!!
+                    }
+                ) { usuario ->
+
+                    Row {
+
+                        Text(usuario.userName)
+
+                    }
+
+                }
+
+            }
+
         }
 
-
     }
+
 }

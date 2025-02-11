@@ -1,4 +1,4 @@
-package com.asociacion.calculadoracostos.Repositories.Entities
+package com.asociacion.calculadoracostos.Data.Entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

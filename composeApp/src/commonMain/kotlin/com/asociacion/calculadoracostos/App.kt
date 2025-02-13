@@ -25,36 +25,48 @@ fun App() {
 
         val loginViewModel = koinViewModel<LoginViewModel>()
 
-        val usuarios = loginViewModel.usuario.collectAsState(Dispatchers.IO).value
+        val loginState = loginViewModel.loginState.collectAsState(Dispatchers.IO)
 
         MaterialTheme {
 
             Button(onClick = {
 
-                loginViewModel.insertUsuario(Usuario(null, Random.nextInt(100, 500).toString(), Random.nextInt(100, 500).toString()))
+                loginViewModel.insertUsuario(
+                    Usuario(
+                        null,
+                        Random.nextInt(100, 500).toString(),
+                        Random.nextInt(100, 500).toString()
+                    )
+                )
 
             }) {
                 Text("Click")
             }
 
-            LazyColumn {
+            if (loginState.value.estaCargando == true && loginState.value.exitosa == true) {
+                Text("Esta cargando...................")
+            } else if (loginState.value.listaUsuario.isNotEmpty() && loginState.value.exitosa == true && loginState.value.estaCargando == false) {
+                LazyColumn {
 
-                items(
-                    items = usuarios,
-                    key = { usuario ->
-                        usuario.id!!
-                    }
-                ) { usuario ->
+                    items(
+                        items = loginState.value.listaUsuario
+                    ) { usuario ->
 
-                    Row {
+                        Row {
 
-                        Text(usuario.userName)
+                            Text(usuario.userName)
+
+                        }
 
                     }
 
                 }
+            }else if (loginState.value.exitosa == false && loginState.value.estaCargando == false){
+
+                Text("Ocurrió un error comuniquese con la oficina de sistemas")
 
             }
+
 
         }
 

@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asociacion.calculadoracostos.Data.Entities.Usuario
 import com.asociacion.calculadoracostos.Data.Repositories.LoginRepository
+import com.asociacion.calculadoracostos.UIStates.LoginState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,16 +18,25 @@ import org.koin.core.component.inject
 class LoginViewModel : ViewModel(), KoinComponent {
 
     private val repo : LoginRepository by inject()
-    private val _usuario = MutableStateFlow<List<Usuario>>(emptyList())
-    val usuario: StateFlow<List<Usuario>> = _usuario.asStateFlow()
+    private val _loginState = MutableStateFlow<LoginState>(LoginState())
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
 
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            repo.getAllUsuarios().collect {
+            _loginState.value = LoginState(estaCargando = true, exitosa = true)
 
-                _usuario.value = it
+            delay(5000)
+
+            repo.getAllUsuarios().collect { usuarios->
+
+                _loginState.value = LoginState(
+
+                    listaUsuario = usuarios,
+                    estaCargando = false,
+                    exitosa = false
+                )
 
             }
 
